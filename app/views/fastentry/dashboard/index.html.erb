@@ -1,0 +1,27 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      Dashboard
+    </h1>
+    <table class="table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Expires at</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @cached.each do |cache| %>
+          <tr>
+            <td><%= cache[:cache_key] %></td>
+            <td><%= cache[:cache_value] %></td>
+            <td><%= cache[:expiration] %></td>
+            <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, class: "button is-danger is-small is-outlined" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
