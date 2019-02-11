@@ -1,5 +1,10 @@
 module Fastentry
   class CacheController < ApplicationController
+    def show
+      key = params[:key]
+      @cache_item = Rails.cache.read(key)
+    end
+
     def invalidate
       key = params[:key]
       Rails.cache.delete(key)

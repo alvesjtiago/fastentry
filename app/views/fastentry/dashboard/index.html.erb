@@ -13,9 +13,9 @@
         <% @cached.each do |cache| %>
           <tr>
             <td><%= cache[:cache_key] %></td>
-            <td><%= cache[:cache_value] %></td>
+            <td><%= link_to cache[:cache_value], cache_path(cache[:cache_key]) %></td>
             <td><%= cache[:expiration] %></td>
-            <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, class: "button is-danger is-small is-outlined" %></td>
+            <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %></td>
           </tr>
         <% end %>
       </tbody>
