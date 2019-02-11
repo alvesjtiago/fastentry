@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Tiago Alves"]
   spec.email       = ["alvesjtiago@gmail.com"]
   spec.homepage    = "https://github.com/alvesjtiago/fastentry"
-  spec.summary     = "Summary of FastEntry"
-  spec.description = "Description"
+  spec.summary     = "Cache management for Rails"
+  spec.description = "Cache management for Rails"
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
