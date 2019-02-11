@@ -1,5 +1,19 @@
 <section class="section">
   <div class="container">
+    <form action="">
+    <%= form_tag(root_path, method: "get") do %>
+      <div class="field has-addons">
+        <div class="control is-expanded">
+          <input class="input" type="text" name="query" placeholder="Search for a key" value="<%= params[:query] %>">
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-info">
+            Search
+          </button>
+        </div>
+      </div>
+    <% end %>
+    <br>
     <table class="table is-hoverable is-fullwidth">
       <thead>
         <tr>
@@ -12,8 +26,8 @@
       <tbody>
         <% @cached.each do |cache| %>
           <tr>
-            <td><%= cache[:cache_key] %></td>
-            <td><%= link_to cache[:cache_value], cache_path(cache[:cache_key]) %></td>
+            <td><%= truncate cache[:cache_key], length: 100 %></td>
+            <td><%= link_to truncate(cache[:cache_value].to_s, length: 100), cache_path(cache[:cache_key]) %></td>
             <td><%= cache[:expiration] %></td>
             <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %></td>
           </tr>
