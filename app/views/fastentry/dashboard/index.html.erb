@@ -34,5 +34,33 @@
         <% end %>
       </tbody>
     </table>
+
+    <nav class="pagination is-small is-right" role="navigation" aria-label="pagination">
+      <a <% if @page - 1 >= 0 %>href="<%= root_path(params.merge(page: @page - 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-previous">Previous</a>
+      <a <% if @page + 1 <= @number_of_pages - 1 %>href="<%= root_path(params.merge(page: @page + 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-next">Next</a>
+
+      <ul class="pagination-list">
+        <% if @page - 2 >= 0 %>
+          <li><%= link_to "1", root_path(params.merge(page: 0).permit(:query, :page)), class: "pagination-link" %></li>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <% end %>
+
+        <% if @page - 1 >= 0 %>
+          <%= link_to @page, root_path(params.merge(page: @page - 1).permit(:query, :page)), class: "pagination-link" %>
+        <% end %>
+        <% if @number_of_pages > 1 %>
+          <%= link_to @page + 1, root_path(params.merge(page: @page).permit(:query, :page)), class: "pagination-link is-current" %>
+        <% end %>
+        <% if @page + 1 <= @number_of_pages - 1 %>
+          <%= link_to @page + 2, root_path(params.merge(page: @page + 1).permit(:query, :page)), class: "pagination-link" %>
+        <% end %>
+
+
+        <% if @page + 2 <= @number_of_pages - 1 %>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <li><%= link_to @number_of_pages, root_path(params.merge(page: @number_of_pages - 1).permit(:query, :page)), class: "pagination-link" %></li>
+        <% end %>
+      </ul>
+    </nav>
   </div>
 </section>
