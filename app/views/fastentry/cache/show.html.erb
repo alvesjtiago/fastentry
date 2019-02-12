@@ -1,14 +1,18 @@
 <section class="section">
   <div class="container">
-    <p class="heading">Key</p>
-    <p class="subtitle"><%= @key %></p>
-    
-    <% if @expiration %>
-      <p class="heading">Expiration</p>
-      <p class="subtitle"><%= @expiration %></p>
-    <% end %>
-    
-    <p class="heading">Content</p>
-    <%= ap(@cache_item).html_safe %>
+    <%= link_to "< Back", root_url, class: "button is-small", style: "margin-bottom: 30px;" %>
+
+    <div>
+      <p class="heading">Key</p>
+      <p class="subtitle"><%= @key %></p>
+      
+      <% if @expiration %>
+        <p class="heading">Expiration</p>
+        <p class="subtitle"><%= @expiration %></p>
+      <% end %>
+      
+      <p class="heading">Content</p>
+      <%= ap(@cache_item).html_safe %>
+    </div>
   </div>
 </section>
