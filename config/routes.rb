@@ -5,4 +5,6 @@ Fastentry::Engine.routes.draw do
 
   get "cache_item/:key" => "cache#show", as: "cache"
   delete "invalidate/:key" => "cache#invalidate", as: "invalidate_key"
+
+  resources :stats, only: [:index]
 end
