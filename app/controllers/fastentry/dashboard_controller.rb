@@ -6,7 +6,7 @@ module Fastentry
       @keys = Rails.cache.instance_variable_get(:@data).keys
 
       if params[:query].present?
-        @keys = @keys.select { |c| c.include?(params[:query]) }
+        @keys = @keys.select { |key| key.downcase.include?(params[:query].downcase) }
       end
 
       @number_of_pages = (@keys.count / @per_page.to_f).ceil
