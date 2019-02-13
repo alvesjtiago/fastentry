@@ -31,6 +31,8 @@ module Fastentry
             cache_value: value,
             expiration: (Time.at(expiration_date) if expiration_date.present?)
           }
+        rescue
+          next
         end
       end
     end
