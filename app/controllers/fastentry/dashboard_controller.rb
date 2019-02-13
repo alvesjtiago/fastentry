@@ -22,15 +22,16 @@ module Fastentry
           expiration_date = nil
         end
 
-        # Replaced call of value because of https://github.com/redis-store/redis-store/issues/96
-        # value = Rails.cache.read(key.to_s)
-        value = Rails.cache.fetch(key.to_s, raw: true) { 0 }
+        # Only include keys that rails can read
+        begin
+          value = Rails.cache.read(key)
 
-        @cached << {
-          cache_key: key,
-          cache_value: value,
-          expiration: (Time.at(expiration_date) if expiration_date.present?)
-        }
+          @cached << {
+            cache_key: key,
+            cache_value: value,
+            expiration: (Time.at(expiration_date) if expiration_date.present?)
+          }
+        end
       end
     end
 
