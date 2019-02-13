@@ -1,7 +1,10 @@
 # FastEntry
 Cache management for Rails applications.
 
-FastEntry comes with a web application that can display the current state of your cache usage. Use it to view cache keys, inspect details or invalidate cached information.
+> There are only two hard things in Computer Science: cache invalidation and naming things.
+> -- Phil Karlton
+
+FastEntry helps with the first. It comes with a web interface that can display the current state of your cache usage. Use it to view cache keys, inspect details or invalidate cached information.
 
 ![](https://user-images.githubusercontent.com/407470/52439845-d8ecff80-2b1c-11e9-8cdb-8c2323585583.png)
 
