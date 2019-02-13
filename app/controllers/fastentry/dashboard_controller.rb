@@ -15,7 +15,13 @@ module Fastentry
 
       @cached = []
       @keys.each do |key|
-        expiration_date = Rails.cache.send(:read_entry, key, {}).expires_at
+        # Prevent from crashing if expiration can't be read (temporary fix)
+        begin
+          expiration_date = Rails.cache.send(:read_entry, key, {}).expires_at
+        rescue
+          expiration_date = nil
+        end
+
         @cached << {
           cache_key: key,
           cache_value: Rails.cache.read(key.to_s),
