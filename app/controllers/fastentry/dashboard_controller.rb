@@ -1,5 +1,5 @@
 module Fastentry
-  class DashboardController < ApplicationController
+  class DashboardController < Fastentry::ApplicationController
     before_action :set_page, only: [:index]
 
     def index

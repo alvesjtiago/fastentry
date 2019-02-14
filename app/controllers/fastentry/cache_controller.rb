@@ -1,5 +1,5 @@
 module Fastentry
-  class CacheController < ApplicationController
+  class CacheController < Fastentry::ApplicationController
     def show
       @key = params[:key]
       
