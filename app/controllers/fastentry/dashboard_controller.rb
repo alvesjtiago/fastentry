@@ -22,18 +22,18 @@ module Fastentry
           expiration_date = nil
         end
 
-        # Only include keys that rails can read
+        # Prevent from crashing if can't read key
         begin
           value = Rails.cache.read(key)
-
-          @cached << {
-            cache_key: key,
-            cache_value: value,
-            expiration: (Time.at(expiration_date) if expiration_date.present?)
-          }
         rescue
-          next
+          value = nil
         end
+
+        @cached << {
+          cache_key: key,
+          cache_value: value,
+          expiration: (Time.at(expiration_date) if expiration_date.present?)
+        }
       end
     end
 
