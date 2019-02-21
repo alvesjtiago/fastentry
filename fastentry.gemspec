@@ -18,4 +18,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", "> 4.0"
   spec.add_dependency 'awesome_print'
+
+  spec.add_development_dependency 'sqlite3', '~> 1.3.13'
 end

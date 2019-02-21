@@ -3,38 +3,23 @@ module Fastentry
     before_action :set_page, only: [:index]
 
     def index
-      @keys = Rails.cache.instance_variable_get(:@data).keys
+      @keys = Fastentry.cache.keys
 
       if params[:query].present?
-        @keys = @keys.select { |key| key.downcase.include?(params[:query].downcase) }
+        @keys.select! { |key| key.downcase.include?(params[:query].downcase) }
       end
 
       @number_of_pages = (@keys.count / @per_page.to_f).ceil
-
       @keys = @keys[@offset, @per_page] || []
 
-      @cached = []
-      @keys.each do |key|
-        # Prevent from crashing if expiration can't be read (temporary fix)
-        begin
-          expiration_date = Rails.cache.send(:read_entry, key, {}).expires_at
-        rescue
-          expiration_date = nil
+      @cached =
+        @keys.map do |key|
+          {
+            cache_key: key,
+            cache_value: Fastentry.cache.read(key),
+            expiration: Fastentry.cache.expiration_for(key)
+          }
         end
-
-        # Prevent from crashing if can't read key
-        begin
-          value = Rails.cache.read(key)
-        rescue
-          value = nil
-        end
-
-        @cached << {
-          cache_key: key,
-          cache_value: value,
-          expiration: (Time.at(expiration_date) if expiration_date.present?)
-        }
-      end
     end
 
     private
