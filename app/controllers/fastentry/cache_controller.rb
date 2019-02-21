@@ -3,7 +3,7 @@ module Fastentry
     def show
       @key = params[:key]
 
-      expiration = Fastentry.cache.expiration_for(key)
+      expiration = Fastentry.cache.expiration_for(@key)
       @expiration = expiration.strftime("%a, %e %b %Y %H:%M:%S %z") if expiration
 
       @cache_item = Fastentry.cache.read(@key)

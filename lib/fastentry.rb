@@ -7,7 +7,7 @@ module Fastentry
 
     def expiration_for(key)
       expires_at = cache.send(:read_entry, key, {}).expires_at
-      expires_at.strip.empty? ? nil : Time.at(expires_at)
+      expires_at.to_s.strip.empty? ? nil : Time.at(expires_at)
     rescue StandardError
       nil
     end
@@ -21,7 +21,11 @@ module Fastentry
     def self.for(cache)
       case cache
       when ActiveSupport::Cache::Strategy::LocalCache
-        LocalCache.new(cache)
+        DefaultCache.new(cache)
+      when ActiveSupport::Cache::FileStore
+        DefaultCache.new(cache)
+      when ActiveSupport::Cache::MemoryStore
+        DefaultCache.new(cache)
       when ActiveSupport::Cache::RedisCacheStore
         RedisCache.new(cache)
       else
@@ -30,7 +34,7 @@ module Fastentry
     end
   end
 
-  class LocalCache < Cache
+  class DefaultCache < Cache
     def keys
       cache.instance_variable_get(:@data).keys
     end
