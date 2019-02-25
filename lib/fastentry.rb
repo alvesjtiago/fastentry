@@ -19,17 +19,21 @@ module Fastentry
     end
 
     def self.for(cache)
-      case cache
-      when ActiveSupport::Cache::Strategy::LocalCache
-        DefaultCache.new(cache)
-      when ActiveSupport::Cache::FileStore
-        DefaultCache.new(cache)
-      when ActiveSupport::Cache::MemoryStore
-        DefaultCache.new(cache)
-      when ActiveSupport::Cache::RedisCacheStore
-        RedisCache.new(cache)
+      if ::Rails::VERSION::MAJOR >= 5
+        case cache
+        when ActiveSupport::Cache::Strategy::LocalCache
+          DefaultCache.new(cache)
+        when ActiveSupport::Cache::FileStore
+          DefaultCache.new(cache)
+        when ActiveSupport::Cache::MemoryStore
+          DefaultCache.new(cache)
+        when ActiveSupport::Cache::RedisCacheStore
+          RedisCache.new(cache)
+        else
+          raise ArgumentError, 'Unsupported cache type'
+        end
       else
-        raise ArgumentError, 'Unsupported cache type'
+        DefaultCache.new(cache)
       end
     end
   end
