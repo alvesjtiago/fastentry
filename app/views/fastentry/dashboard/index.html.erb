@@ -14,53 +14,73 @@
       </div>
     <% end %>
     <br>
-    <table class="table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-          <th>Expires at</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @cached.each do |cache| %>
+    <%= form_tag(invalidate_multiple_keys_path, method: "delete", id: "checkbox-form") do %>
+      <table class="table is-hoverable is-fullwidth">
+        <thead>
           <tr>
-            <td><%= truncate cache[:cache_key], length: 100 %></td>
-            <td><%= link_to truncate(cache[:cache_value].to_s, length: 100), cache_path(cache[:cache_key]) %></td>
-            <td><%= cache[:expiration] %></td>
-            <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %></td>
+            <th><input type="checkbox" id="select-all-checkboxes"></th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Expires at</th>
+            <th>Actions</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @cached.each do |cache| %>
+            <tr>
+              <td><input type="checkbox" name="invalidate_cache_keys[]" value="<%= cache[:cache_key] %>"></td>
+              <td><%= truncate cache[:cache_key], length: 100 %></td>
+              <td><%= link_to truncate(cache[:cache_value].to_s, length: 100), cache_path(cache[:cache_key]) %></td>
+              <td><%= cache[:expiration] %></td>
+              <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
 
-    <nav class="pagination is-small is-right" role="navigation" aria-label="pagination">
-      <a <% if @page - 1 >= 0 %>href="<%= root_path(params.merge(page: @page - 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-previous">Previous</a>
-      <a <% if @page + 1 <= @number_of_pages - 1 %>href="<%= root_path(params.merge(page: @page + 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-next">Next</a>
+      <nav class="pagination is-small is-right" role="navigation" aria-label="pagination">
+        <%= button_tag "Invalidate selected", data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %>
 
-      <ul class="pagination-list">
-        <% if @page - 2 >= 0 %>
-          <li><%= link_to "1", root_path(params.merge(page: 0).permit(:query, :page)), class: "pagination-link" %></li>
-          <li><span class="pagination-ellipsis">&hellip;</span></li>
-        <% end %>
+        <ul class="pagination-list">
+          <a <% if @page - 1 >= 0 %>href="<%= root_path(params.merge(page: @page - 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-previous">Previous</a>
+          <a <% if @page + 1 <= @number_of_pages - 1 %>href="<%= root_path(params.merge(page: @page + 1).permit(:query, :page)) %>"<% else %>disabled<% end %> class="pagination-next">Next</a>
 
-        <% if @page - 1 >= 0 %>
-          <%= link_to @page, root_path(params.merge(page: @page - 1).permit(:query, :page)), class: "pagination-link" %>
-        <% end %>
-        <% if @number_of_pages > 1 %>
-          <%= link_to @page + 1, root_path(params.merge(page: @page).permit(:query, :page)), class: "pagination-link is-current" %>
-        <% end %>
-        <% if @page + 1 <= @number_of_pages - 1 %>
-          <%= link_to @page + 2, root_path(params.merge(page: @page + 1).permit(:query, :page)), class: "pagination-link" %>
-        <% end %>
+          <% if @page - 2 >= 0 %>
+            <li><%= link_to "1", root_path(params.merge(page: 0).permit(:query, :page)), class: "pagination-link" %></li>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <% end %>
+
+          <% if @page - 1 >= 0 %>
+            <%= link_to @page, root_path(params.merge(page: @page - 1).permit(:query, :page)), class: "pagination-link" %>
+          <% end %>
+          <% if @number_of_pages > 1 %>
+            <%= link_to @page + 1, root_path(params.merge(page: @page).permit(:query, :page)), class: "pagination-link is-current" %>
+          <% end %>
+          <% if @page + 1 <= @number_of_pages - 1 %>
+            <%= link_to @page + 2, root_path(params.merge(page: @page + 1).permit(:query, :page)), class: "pagination-link" %>
+          <% end %>
 
 
-        <% if @page + 2 <= @number_of_pages - 1 %>
-          <li><span class="pagination-ellipsis">&hellip;</span></li>
-          <li><%= link_to @number_of_pages, root_path(params.merge(page: @number_of_pages - 1).permit(:query, :page)), class: "pagination-link" %></li>
-        <% end %>
-      </ul>
-    </nav>
+          <% if @page + 2 <= @number_of_pages - 1 %>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <li><%= link_to @number_of_pages, root_path(params.merge(page: @number_of_pages - 1).permit(:query, :page)), class: "pagination-link" %></li>
+          <% end %>
+        </ul>
+      </nav>
+    <% end %>
   </div>
 </section>
+
+<script>
+  window.onload = function(){
+    // Select all checkboxes
+    var selectControl = document.getElementById("select-all-checkboxes");
+    selectControl.onclick = function(){
+      checkboxes = document.getElementsByName("invalidate_cache_keys[]");
+      var checked = selectControl.checked;
+      for (i = 0; i < checkboxes.length; i++){
+        checkboxes[i].checked = checked ? 'checked' : '';
+      }
+    };
+  };
+</script>

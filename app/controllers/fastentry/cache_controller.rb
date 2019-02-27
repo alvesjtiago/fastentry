@@ -15,5 +15,14 @@ module Fastentry
 
       redirect_back(fallback_location: root_path)
     end
+
+    def invalidate_multiple
+      keys = params[:invalidate_cache_keys] || []
+      keys.each do |key|
+        Fastentry.cache.delete(key)
+      end
+
+      redirect_back(fallback_location: root_path)
+    end
   end
 end
