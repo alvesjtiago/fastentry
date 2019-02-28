@@ -13,7 +13,7 @@ module Fastentry
       key = params[:key]
       Fastentry.cache.delete(key)
 
-      redirect_back(fallback_location: root_path)
+      redirect_to root_path
     end
 
     def invalidate_multiple
@@ -22,7 +22,7 @@ module Fastentry
         Fastentry.cache.delete(key)
       end
 
-      redirect_back(fallback_location: root_path)
+      redirect_to root_path
     end
   end
 end
