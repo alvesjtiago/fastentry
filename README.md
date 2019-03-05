@@ -28,8 +28,19 @@ $ gem install fastentry
 Add the following to your `config/routes.rb`:
 
 ```ruby
-require 'fastentry/engine'
+require "fastentry/engine"
 mount Fastentry::Engine, at: "/fastentry"
+```
+
+#### Authentication
+
+If you'd like to restrict access to this interface you can use constraints on your routes. Here's an example using Devise to authenticate an `Admin` before getting access to FastEntry:
+
+```ruby
+require "fastentry/engine"
+authenticate :admin do
+  mount Fastentry::Engine, at: "/fastentry"
+end
 ```
 
 ## License
