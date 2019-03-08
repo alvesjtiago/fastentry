@@ -31,6 +31,6 @@ module Memcached
 
   def self.keys(*_servers)
     items = self.items(*_servers)
-    items.collect { |i| i[0] }.sort
+    items.collect { |i| CGI.unescape(i[0]) }.sort
   end
 end
