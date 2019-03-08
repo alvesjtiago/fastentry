@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails"
   spec.add_dependency 'awesome_print'
+  spec.add_dependency 'net-telnet'
 
   spec.add_development_dependency 'sqlite3'
 

@@ -1,5 +1,6 @@
 require 'fastentry/engine'
 require 'awesome_print'
+require 'memcached'
 
 module Fastentry
   class Cache < SimpleDelegator
@@ -30,13 +31,34 @@ module Fastentry
         when "ActiveSupport::Cache::RedisCacheStore"
           RedisCache.new(cache)
         when "ActiveSupport::Cache::MemCacheStore"
-          DefaultCache.new(cache)
+          MemcacheCache.new(cache)
+        when "ActiveSupport::Cache::DalliStore"
+          DalliCache.new(cache)
         else
           raise ArgumentError, 'Unsupported cache type'
         end
       else
-        DefaultCache.new(cache)
+        case cache.class.name
+        when "ActiveSupport::Cache::MemCacheStore"
+          DalliCache.new(cache)
+        when "ActiveSupport::Cache::DalliStore"
+          DalliCache.new(cache)
+        else
+          DefaultCache.new(cache)
+        end
       end
+    end
+  end
+
+  class MemcacheCache < Cache
+    def keys
+      Memcached.keys(Rails.cache.stats.keys.first)
+    end
+  end
+
+  class DalliCache < Cache
+    def keys
+      Memcached.keys(Rails.cache.dalli.stats.keys.first)
     end
   end
 
