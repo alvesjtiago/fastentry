@@ -1,6 +1,5 @@
 <section class="section">
   <div class="container">
-    <form action="">
     <%= form_tag(root_path, method: "get") do %>
       <div class="field has-addons">
         <div class="control is-expanded">
@@ -14,11 +13,11 @@
       </div>
     <% end %>
     <br>
-    <%= form_tag(invalidate_multiple_keys_path, method: "delete", id: "checkbox-form") do %>
+    <%= form_tag(invalidate_multiple_keys_path, method: "delete", id: "checkbox-form", class: "wrapper") do %>
       <table class="table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th><input type="checkbox" id="select-all-checkboxes"></th>
+            <th width=10><input type="checkbox" id="select-all-checkboxes"></th>
             <th>Key</th>
             <th>Value</th>
             <th>Expires at</th>
@@ -29,8 +28,8 @@
           <% @cached.each do |cache| %>
             <tr>
               <td><input type="checkbox" name="invalidate_cache_keys[]" value="<%= cache[:cache_key] %>"></td>
-              <td><%= truncate cache[:cache_key], length: 100 %></td>
-              <td><%= link_to truncate(cache[:cache_value].to_s, length: 100), cache_path(cache[:cache_key]) %></td>
+              <td><%= truncate cache[:cache_key], length: 80 %></td>
+              <td><%= link_to truncate(cache[:cache_value].to_s, length: 80), cache_path(cache[:cache_key]) %></td>
               <td><%= cache[:expiration] %></td>
               <td><%= link_to "Invalidate", invalidate_key_path(cache[:cache_key]), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger is-small is-outlined" %></td>
             </tr>
