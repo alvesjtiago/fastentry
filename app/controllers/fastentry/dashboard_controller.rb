@@ -3,14 +3,18 @@ module Fastentry
     before_action :set_page, only: [:index]
 
     def index
-      @keys = Fastentry.cache.keys
+      total_keys = 0
 
       if params[:query].present?
-        @keys.select! { |key| key.downcase.include?(params[:query].downcase) }
+        @keys = Fastentry.cache.search(query: params[:query])
+        total_keys = @keys.count
+        @keys = @keys.try(:[], @page * @per_page, @per_page) || []
+      else
+        @keys = Fastentry.cache.select(from: @page * @per_page, amount: @per_page)
+        total_keys = Fastentry.cache.number_of_keys
       end
 
-      @number_of_pages = (@keys.count / @per_page.to_f).ceil
-      @keys = @keys[@offset, @per_page] || []
+      @number_of_pages = (total_keys / @per_page.to_f).ceil
 
       @cached =
         @keys.map do |key|

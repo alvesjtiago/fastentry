@@ -6,6 +6,19 @@ module Fastentry
   class Cache < SimpleDelegator
     alias cache __getobj__
 
+    def number_of_keys
+      keys.size
+    end
+
+    def select(from: 0, amount: 20)
+      count = adjusted_amount(from, amount)
+      keys.try(:[], from, count) || []
+    end
+
+    def search(query: '')
+      keys.select! { |key| key.downcase.include?(query.downcase) } || []
+    end
+
     def expiration_for(key)
       expires_at = cache.send(:read_entry, key, {}).expires_at
       expires_at.to_s.strip.empty? ? nil : Time.at(expires_at)
@@ -48,6 +61,12 @@ module Fastentry
         end
       end
     end
+
+    private
+
+      def adjusted_amount(from, amount)
+        from + amount > number_of_keys ? (number_of_keys - from) : amount
+      end
   end
 
   class MemcacheCache < Cache
@@ -71,6 +90,19 @@ module Fastentry
   class RedisCache < Cache
     def keys
       cache.redis.keys
+    end
+
+    def number_of_keys
+      cache.redis.dbsize
+    end
+
+    def select(from: 0, amount: 20)
+      count = adjusted_amount(from, amount)
+      cache.redis.scan(from, count: count)[1]
+    end
+
+    def search(query: '')
+      cache.redis.scan_each(match: "*#{query.downcase}*").to_a.uniq
     end
   end
 
