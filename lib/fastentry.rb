@@ -10,13 +10,13 @@ module Fastentry
       keys.size
     end
 
-    def select(from: 0, amount: 20)
-      count = adjusted_amount(from, amount)
+    def select(from: 0, amount: 20, keys: keys)
+      count = adjusted_amount(from, amount, keys)
       keys.try(:[], from, count) || []
     end
 
-    def search(query: '')
-      keys.select! { |key| key.downcase.include?(query.downcase) } || []
+    def search(query: '', keys: keys)
+      keys.select { |key| key.downcase.include?(query.downcase) } || []
     end
 
     def expiration_for(key)
@@ -64,8 +64,9 @@ module Fastentry
 
     private
 
-      def adjusted_amount(from, amount)
-        from + amount > number_of_keys ? (number_of_keys - from) : amount
+      def adjusted_amount(from, amount, keys)
+        n_keys = keys.size
+        from + amount > n_keys ? (n_keys - from) : amount
       end
   end
 
@@ -96,8 +97,8 @@ module Fastentry
       cache.redis.dbsize
     end
 
-    def select(from: 0, amount: 20)
-      count = adjusted_amount(from, amount)
+    def select(from: 0, amount: 20, keys: keys)
+      count = adjusted_amount(from, amount, keys)
       cache.redis.scan(from, count: count)[1]
     end
 

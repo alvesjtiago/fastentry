@@ -5,13 +5,14 @@ module Fastentry
     def index
       total_keys = 0
 
+      keys = Fastentry.cache.keys
       if params[:query].present?
-        @keys = Fastentry.cache.search(query: params[:query])
-        total_keys = @keys.count
+        @keys = Fastentry.cache.search(query: params[:query], keys: keys)
+        total_keys = @keys.size
         @keys = @keys.try(:[], @page * @per_page, @per_page) || []
       else
-        @keys = Fastentry.cache.select(from: @page * @per_page, amount: @per_page)
-        total_keys = Fastentry.cache.number_of_keys
+        @keys = Fastentry.cache.select(from: @page * @per_page, amount: @per_page, keys: keys)
+        total_keys = keys.size
       end
 
       @number_of_pages = (total_keys / @per_page.to_f).ceil
