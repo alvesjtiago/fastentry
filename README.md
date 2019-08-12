@@ -32,6 +32,8 @@ require "fastentry/engine"
 mount Fastentry::Engine, at: "/fastentry"
 ```
 
+_Note: If you're using Rails < 5.1, please add `gem "rails-ujs"` to your Gemfile._
+
 #### Authentication
 
 If you'd like to restrict access to this interface you can use constraints on your routes. Here's an example using Devise to authenticate an `Admin` before getting access to FastEntry:
