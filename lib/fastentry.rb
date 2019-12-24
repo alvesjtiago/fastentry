@@ -98,6 +98,10 @@ module Fastentry
 
     def select(from: 0, amount: 20)
       count = adjusted_amount(from, amount)
+      if count <= 0
+        count = 1
+      end
+
       cache.redis.scan(from, count: count)[1]
     end
 
